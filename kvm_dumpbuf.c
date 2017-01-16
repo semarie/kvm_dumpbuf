@@ -168,14 +168,13 @@ dump_buf(u_long bv, struct buf *b)
 
 	/* open the file */
 	if ((fd = open(filename, O_WRONLY|O_CREAT|O_EXCL, 0600)) == -1)
-		err(EXIT_FAILURE, "dump_buf: open");
+		err(EXIT_FAILURE, "dump_buf: open: %s", filename);
 
 	/* dump the value */
 	off = 0;
 	while (datasize - off > 0) {
-		if ((n = write(fd, data + off, datasize - off)) == 0 ||
-		     n == -1)
-			err(EXIT_FAILURE, "dump_buf: write");
+		if ((n = write(fd, data + off, datasize - off)) == -1)
+			err(EXIT_FAILURE, "dump_buf: write: %s", filename);
 		off += n;
 	}
 
