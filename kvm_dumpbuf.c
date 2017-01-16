@@ -92,7 +92,7 @@ main(int argc, char *argv[])
 		err(EXIT_FAILURE, "kvm_nlist: kernel symbol table unreadable");
 
 	/* read the value */
-	print_verbose("bufhead=%p\n", (void *)nl[0].n_value);
+	print_verbose("bufhead=0x%lx\n", nl[0].n_value);
 	if (kvm_read(kd, nl[0].n_value, &bufhead, sizeof(bufhead)) == -1)
 		err(EXIT_FAILURE, "kvm_read: bufhead");
 
