@@ -96,7 +96,7 @@ main(int argc, char *argv[])
 	if (kvm_read(kd, nl[0].n_value, &bufhead, sizeof(bufhead)) == -1)
 		err(EXIT_FAILURE, "kvm_read: bufhead");
 
-	/* show it */
+	/* dump it */
 	dump_bufhead(&bufhead);
 
 	return EXIT_SUCCESS;
