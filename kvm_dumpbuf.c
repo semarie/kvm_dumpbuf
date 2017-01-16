@@ -139,8 +139,6 @@ dump_bufhead(struct bufhead *bufhead)
 
 		dump_buf((u_long)bp, &b);
 
-		if ((bp = LIST_NEXT(&b, b_list)) == NULL)
-			break;
 	} while ((bp = LIST_NEXT(&b, b_list)) != NULL);
 }
 
