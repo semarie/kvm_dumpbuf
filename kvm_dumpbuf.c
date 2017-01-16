@@ -127,23 +127,23 @@ static void
 dump_bufhead(struct bufhead *bufhead)
 {
 	struct buf	 b;
-	struct buf	*bp;
+	u_long		 b_addr;
 
-	bp = LIST_FIRST(bufhead);
-	if (bp == NULL)
+	b_addr = (u_long)LIST_FIRST(bufhead);
+	if (b_addr == 0)
 		return;
 
 	do {
-		if (kvm_read(kd, (u_long)bp, &b, sizeof(b)) == -1)
+		if (kvm_read(kd, b_addr, &b, sizeof(b)) == -1)
 			err(EXIT_FAILURE, "dump_bufhead: kvm_read");
 
-		dump_buf((u_long)bp, &b);
+		dump_buf(b_addr, &b);
 
-	} while ((bp = LIST_NEXT(&b, b_list)) != NULL);
+	} while ((b_addr = (u_long)LIST_NEXT(&b, b_list)) != 0);
 }
 
 static void
-dump_buf(u_long bv, struct buf *b)
+dump_buf(u_long b_addr, struct buf *b)
 {
 	size_t datasize = b->b_bufsize;
 	char *data = NULL;
@@ -152,7 +152,7 @@ dump_buf(u_long bv, struct buf *b)
 	off_t off;
 	ssize_t n;
 	
-	print_verbose("buf=0x%lx\n", bv);
+	print_verbose("buf=0x%lx\n", b_addr);
 
 	/* alloc buffer for data */
 	if ((data = malloc(datasize)) == NULL)
@@ -164,7 +164,7 @@ dump_buf(u_long bv, struct buf *b)
 
 	/* generate the filename */
 	(void)snprintf(filename, sizeof(filename),
-	    "dump-%p-0x%lx", b->b_vp, bv);
+	    "dump-%p-0x%lx", b->b_vp, b_addr);
 
 	/* open the file */
 	if ((fd = open(filename, O_WRONLY|O_CREAT|O_EXCL, 0600)) == -1)
