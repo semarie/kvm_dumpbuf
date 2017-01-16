@@ -171,12 +171,9 @@ dump_buf(u_long b_addr, struct buf *b)
 		err(EXIT_FAILURE, "dump_buf: open: %s", filename);
 
 	/* dump the value */
-	off = 0;
-	while (datasize - off > 0) {
+	for (off = 0; datasize - off > 0; off += n)
 		if ((n = write(fd, data + off, datasize - off)) == -1)
 			err(EXIT_FAILURE, "dump_buf: write: %s", filename);
-		off += n;
-	}
 
 	close(fd);
 	free(data);
